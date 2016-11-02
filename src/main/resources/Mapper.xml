@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.asiainspection.mapper.Mapper">
+	
+	<resultMap type="com.asiainspection.model.Product" id="productsResultMap">
+		<result column="product_id" property="product_id"/>
+		<result column="name" property="name"/>
+		<result column="description" property="description"/>
+		<result column="price" property="price"/>
+		<result column="category" property="category"/>
+		<result column="category_path" property="categoryPath"/>
+		<result column="supplier" property="supplier"/>
+	</resultMap>		            
+    
+    <insert id="addProduct" parameterType="map">
+    	INSERT INTO 
+    		tblproducts(name,description,price,category,category_path,supplier) 
+    	VALUES
+    		(#{name},#{description},#{price},#{category},#{category_path},#{supplier});
+    </insert>
+    
+    <update id="editProduct" parameterType="map">
+		UPDATE 
+			tblproducts 
+		SET 
+			name=#{name},description=#{description},price=#{price},category=#{category},category_path=#{category_path},supplier=#{supplier} 
+		WHERE 
+			product_id=#{product_id};
+    </update>
+    
+    <delete id="deleteProduct" parameterType="int">
+    	DELETE FROM 
+    		tblproducts 
+    	WHERE 
+    		product_id=#{product_id};
+    </delete>
+    
+    <select id="getProductById" parameterType="int" resultMap="productsResultMap">
+        SELECT 
+        	product_id,name,description,price,category,category_path,supplier 
+        FROM 
+        	tblproducts 
+        WHERE 
+        	product_id=#{product_id};
+    </select>
+    
+    <select id="getAllProducts" resultMap="productsResultMap">
+        SELECT 
+        	product_id,name,description,price,category,category_path,supplier 
+        FROM 
+        	tblproducts;
+    </select>
+    
+    <select id="getAllProductByUserId" parameterType="int" resultMap="productsResultMap">
+        SELECT 
+        	user_id,product_id 
+        FROM 
+        	user_products 
+        WHERE 
+        	user_id=#{user_id};
+    </select>
+    
+    <select id="getUserIdByUsernameAndPassword" parameterType="map" resultType="Integer">
+        SELECT 
+        	user_id 
+        FROM 
+        	tblusers 
+        WHERE 
+        	username=#{username} 
+        AND 
+        	password=#{password};
+    </select>
+    
+    <select id="getUserAuthorityByUsernameAndPassword" parameterType="map" resultType="String">
+        SELECT 
+        	authorization 
+        FROM 
+        	tblusers 
+        WHERE 
+        	username=#{username} 
+        AND 
+        	password=#{password};
+    </select>                             
+
+</mapper>

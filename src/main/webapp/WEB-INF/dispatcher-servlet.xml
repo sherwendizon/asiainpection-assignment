@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+   <default-servlet-handler/>
+   <annotation-driven />   
+   <resources location="/resources/" mapping="/resources/**" />
+   <context:component-scan base-package="com.asiainspection" />
+   
+   <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+       <beans:property name="prefix" value="/WEB-INF/view/" />
+       <beans:property name="suffix" value=".jsp" />
+   </beans:bean>
+   
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	<context:annotation-config/>
+	
+ 	<beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" scope="singleton">
+		<beans:property name="driverClassName" value="${jdbc.driver}"/>
+		<beans:property name="url" value="${jdbc.url}"/>
+		<beans:property name="username" value="${jdbc.userName}"/>
+		<beans:property name="password" value="${jdbc.password}"/>
+	</beans:bean>
+
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="typeAliasesPackage" value="com.asiainspection.model"/>
+		<beans:property name="mapperLocations" value="classpath:Mapper.xml" />
+	</beans:bean>
+	
+	<beans:bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg index="0" ref="sqlSessionFactory" />
+	</beans:bean>
+	
+	<beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<beans:property name="basePackage" value="com.asiainspection.mapper" />
+	</beans:bean>
+		
+	<beans:bean id="productsDao" class="com.asiainspection.dao.impl.ProductsDaoImpl" />
+	<beans:bean id="userDao" class="com.asiainspection.dao.impl.UserDaoImpl" />  	   
+   
+</beans:beans>
